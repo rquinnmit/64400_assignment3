@@ -17,6 +17,7 @@
 #include "IntegratorFactory.hpp"
 #include "SimpleCircularNode.hpp"
 #include "PendulumNode.hpp"
+#include "ClothNode.hpp"
 
 
 namespace GLOO {
@@ -107,10 +108,111 @@ void SimulationApp::SetupScene() {
     root.AddChild(std::move(pendulum_node));
   }
 
-  // ========== Example 3: Cloth (Right) - Placeholder for now ==========
+  // ========== Example 3: Cloth (Right) ==========
   {
-    // TODO: Implement cloth in the next section
-    // For now, we can add another pendulum or leave empty
+    // Create cloth system with 8x8 grid of particles
+    auto system = std::make_shared<PendulumSystem>();
+    
+    // Set physics parameters
+    system->SetGravity(glm::vec3(0.0f, -9.8f, 0.0f));
+    system->SetDragCoefficient(2.0f);  // Higher drag for cloth stability
+    
+    const int grid_size = 8;
+    const float particle_mass = 0.5f;
+    const float spacing = 0.25f;  // Distance between adjacent particles
+    
+    // Spring stiffness values
+    const float structural_stiffness = 80.0f;
+    const float shear_stiffness = 40.0f;
+    const float flex_stiffness = 40.0f;
+    
+    // Helper function to get particle index from grid coordinates
+    auto IndexOf = [grid_size](int i, int j) -> int {
+      return i * grid_size + j;
+    };
+    
+    // Add all particles in a grid
+    for (int i = 0; i < grid_size; i++) {
+      for (int j = 0; j < grid_size; j++) {
+        system->AddParticle(particle_mass, false);
+      }
+    }
+    
+    // Fix the top two corners
+    system->SetParticleFixed(IndexOf(0, 0), true);
+    system->SetParticleFixed(IndexOf(0, grid_size - 1), true);
+    
+    // Add structural springs (horizontal and vertical neighbors)
+    for (int i = 0; i < grid_size; i++) {
+      for (int j = 0; j < grid_size; j++) {
+        // Horizontal spring to the right
+        if (j < grid_size - 1) {
+          system->AddSpring(IndexOf(i, j), IndexOf(i, j + 1), 
+                           structural_stiffness, spacing);
+        }
+        
+        // Vertical spring downward
+        if (i < grid_size - 1) {
+          system->AddSpring(IndexOf(i, j), IndexOf(i + 1, j), 
+                           structural_stiffness, spacing);
+        }
+      }
+    }
+    
+    // Add shear springs (diagonal neighbors)
+    for (int i = 0; i < grid_size - 1; i++) {
+      for (int j = 0; j < grid_size - 1; j++) {
+        // Diagonal down-right
+        system->AddSpring(IndexOf(i, j), IndexOf(i + 1, j + 1), 
+                         shear_stiffness, spacing * std::sqrt(2.0f));
+        
+        // Diagonal down-left
+        system->AddSpring(IndexOf(i, j + 1), IndexOf(i + 1, j), 
+                         shear_stiffness, spacing * std::sqrt(2.0f));
+      }
+    }
+    
+    // Add flex springs (skip one particle - 2 units away)
+    for (int i = 0; i < grid_size; i++) {
+      for (int j = 0; j < grid_size; j++) {
+        // Horizontal flex spring (2 units right)
+        if (j < grid_size - 2) {
+          system->AddSpring(IndexOf(i, j), IndexOf(i, j + 2), 
+                           flex_stiffness, spacing * 2.0f);
+        }
+        
+        // Vertical flex spring (2 units down)
+        if (i < grid_size - 2) {
+          system->AddSpring(IndexOf(i, j), IndexOf(i + 2, j), 
+                           flex_stiffness, spacing * 2.0f);
+        }
+      }
+    }
+    
+    // Initialize particle positions in a grid
+    ParticleState initial_state;
+    initial_state.positions.resize(grid_size * grid_size);
+    initial_state.velocities.resize(grid_size * grid_size);
+    
+    for (int i = 0; i < grid_size; i++) {
+      for (int j = 0; j < grid_size; j++) {
+        int idx = IndexOf(i, j);
+        initial_state.positions[idx] = glm::vec3(
+          j * spacing - (grid_size - 1) * spacing / 2.0f,  // Center horizontally
+          -i * spacing,                                      // Hang downward
+          0.0f
+        );
+        initial_state.velocities[idx] = glm::vec3(0.0f);
+      }
+    }
+    
+    // Create integrator and node
+    auto integrator = IntegratorFactory::CreateIntegrator<PendulumSystem, ParticleState>(
+        integrator_type_);
+    auto cloth_node = make_unique<ClothNode>(
+        integration_step_, std::move(integrator), system, initial_state, grid_size);
+    cloth_node->GetTransform().SetPosition(glm::vec3(3.0f, 2.0f, 0.0f));
+    root.AddChild(std::move(cloth_node));
   }
 }
 }  // namespace GLOO

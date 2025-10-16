@@ -436,4 +436,5 @@ CMakeFiles/assignment3.dir/assignment_code/assignment3/SimulationApp.cpp.obj: \
  C:/Users/pyanq/6.4400/assignment3/gloo/shaders/SimpleShader.hpp \
  C:/Users/pyanq/6.4400/assignment3/gloo/InputManager.hpp \
  C:/msys64/ucrt64/include/c++/15.2.0/functional \
- C:/msys64/ucrt64/include/c++/15.2.0/bits/std_function.h
+ C:/msys64/ucrt64/include/c++/15.2.0/bits/std_function.h \
+ C:\Users\pyanq\6.4400\assignment3\assignment_code\assignment3\ClothNode.hpp
