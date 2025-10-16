@@ -14,6 +14,10 @@
 #include "gloo/cameras/ArcBallCameraNode.hpp"
 #include "gloo/debug/AxisNode.hpp"
 
+#include "IntegratorFactory.hpp"
+#include "SimpleCircularNode.hpp"
+#include "PendulumNode.hpp"
+
 
 namespace GLOO {
 SimulationApp::SimulationApp(const std::string& app_name,
@@ -23,17 +27,12 @@ SimulationApp::SimulationApp(const std::string& app_name,
     : Application(app_name, window_size),
       integrator_type_(integrator_type),
       integration_step_(integration_step) {
-  // TODO: remove the following two lines and use integrator type and step to
-  // create integrators; the lines below exist only to suppress compiler
-  // warnings.
-  UNUSED(integrator_type_);
-  UNUSED(integration_step_);
 }
 
 void SimulationApp::SetupScene() {
   SceneNode& root = scene_->GetRootNode();
 
-  auto camera_node = make_unique<ArcBallCameraNode>(45.f, 0.75f, 5.0f);
+  auto camera_node = make_unique<ArcBallCameraNode>(45.f, 0.75f, 10.0f);
   scene_->ActivateCamera(camera_node->GetComponentPtr<CameraComponent>());
   root.AddChild(std::move(camera_node));
 
@@ -49,7 +48,69 @@ void SimulationApp::SetupScene() {
   point_light->SetAttenuation(glm::vec3(1.0f, 0.09f, 0.032f));
   auto point_light_node = make_unique<SceneNode>();
   point_light_node->CreateComponent<LightComponent>(point_light);
-  point_light_node->GetTransform().SetPosition(glm::vec3(0.0f, 2.0f, 4.f));
+  point_light_node->GetTransform().SetPosition(glm::vec3(0.0f, 4.0f, 5.f));
   root.AddChild(std::move(point_light_node));
+
+  // ========== Example 1: Simple Circular Motion (Left) ==========
+  {
+    auto integrator = IntegratorFactory::CreateIntegrator<SimpleCircularSystem, ParticleState>(
+        integrator_type_);
+    auto simple_node = make_unique<SimpleCircularNode>(
+        integration_step_, std::move(integrator));
+    simple_node->GetTransform().SetPosition(glm::vec3(-3.0f, 0.0f, 0.0f));
+    root.AddChild(std::move(simple_node));
+  }
+
+  // ========== Example 2: Pendulum Chain (Middle) ==========
+  {
+    // Create pendulum system with 4 particles
+    auto system = std::make_shared<PendulumSystem>();
+    
+    // Set physics parameters
+    system->SetGravity(glm::vec3(0.0f, -9.8f, 0.0f));
+    system->SetDragCoefficient(0.5f);  // Adjust for stability
+    
+    // Add 4 particles in a vertical chain
+    const int num_particles = 4;
+    const float particle_mass = 1.0f;
+    const float spring_stiffness = 100.0f;
+    const float spring_rest_length = 0.5f;
+    
+    for (int i = 0; i < num_particles; i++) {
+      system->AddParticle(particle_mass, false);
+    }
+    
+    // Fix the first particle (top of chain)
+    system->SetParticleFixed(0, true);
+    
+    // Connect particles with springs to form a chain
+    for (int i = 0; i < num_particles - 1; i++) {
+      system->AddSpring(i, i + 1, spring_stiffness, spring_rest_length);
+    }
+    
+    // Initialize particle positions (vertical chain)
+    ParticleState initial_state;
+    initial_state.positions.resize(num_particles);
+    initial_state.velocities.resize(num_particles);
+    
+    for (int i = 0; i < num_particles; i++) {
+      initial_state.positions[i] = glm::vec3(0.0f, -i * spring_rest_length, 0.0f);
+      initial_state.velocities[i] = glm::vec3(0.0f);
+    }
+    
+    // Create integrator and node
+    auto integrator = IntegratorFactory::CreateIntegrator<PendulumSystem, ParticleState>(
+        integrator_type_);
+    auto pendulum_node = make_unique<PendulumNode>(
+        integration_step_, std::move(integrator), system, initial_state);
+    pendulum_node->GetTransform().SetPosition(glm::vec3(0.0f, 2.0f, 0.0f));
+    root.AddChild(std::move(pendulum_node));
+  }
+
+  // ========== Example 3: Cloth (Right) - Placeholder for now ==========
+  {
+    // TODO: Implement cloth in the next section
+    // For now, we can add another pendulum or leave empty
+  }
 }
 }  // namespace GLOO
