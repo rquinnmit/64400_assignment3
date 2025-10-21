@@ -30,7 +30,7 @@ public:
           time_(0.0f) {
         
         CreateParticleSphere();
-        CreateSpringLines();
+        // CreateSpringLines();  // Disabled - no lines between balls
     }
 
     void Update(double delta_time) override {
@@ -48,7 +48,7 @@ public:
         }
 
         UpdateParticleSpheres();
-        UpdateSpringLines();
+        // UpdateSpringLines();  // Disabled - no lines between balls
     }
 
 private:
