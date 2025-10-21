@@ -79,7 +79,7 @@ cmake --build .
 ```
 Left: Red sphere (circular motion)
 Middle: Blue spheres (pendulum chain)
-Right: Wireframe grid (cloth)
+Right: Purple cloth (8×8) + Orange moving sphere (collision!)
 ```
 
 ### Circular Motion (Left):
@@ -96,11 +96,16 @@ Right: Wireframe grid (cloth)
 - [ ] Eventually settles
 
 ### Cloth (Right):
-- [ ] 8×8 grid of lines visible
+- [ ] 8×8 smooth shaded surface (purple/lavender color)
+- [ ] Orange sphere swinging back and forth
 - [ ] Hanging from two top corners
 - [ ] Falls and drapes naturally
+- [ ] Smooth shading with realistic lighting
+- [ ] Specular highlights visible on surface
+- [ ] **Sphere collision - cloth pushes away from sphere**
+- [ ] **Cloth drapes over sphere as it passes through**
 - [ ] No explosions (with RK4)
-- [ ] Stable equilibrium shape
+- [ ] Dynamic, interactive motion
 
 ---
 

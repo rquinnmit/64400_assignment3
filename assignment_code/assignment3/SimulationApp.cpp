@@ -17,6 +17,7 @@
 #include "IntegratorFactory.hpp"
 #include "SimpleCircularNode.hpp"
 #include "PendulumNode.hpp"
+#include "SphereNode.hpp"
 #include "ClothNode.hpp"
 
 
@@ -108,8 +109,14 @@ void SimulationApp::SetupScene() {
     root.AddChild(std::move(pendulum_node));
   }
 
-  // ========== Example 3: Cloth (Right) ==========
+  // ========== Example 3: Cloth with Sphere Collision (Right) ==========
   {
+    // First create the moving sphere for collision
+    // Position sphere in front of cloth (positive Z), it will oscillate back and forth
+    auto sphere = make_unique<SphereNode>(0.4f, glm::vec3(3.0f, 0.5f, 1.5f));
+    auto* sphere_ptr = sphere.get();  // Keep non-owning pointer for cloth
+    root.AddChild(std::move(sphere));
+    
     // Create cloth system with 8x8 grid of particles
     auto system = std::make_shared<PendulumSystem>();
     
@@ -206,11 +213,11 @@ void SimulationApp::SetupScene() {
       }
     }
     
-    // Create integrator and node
+    // Create integrator and node with sphere collision
     auto integrator = IntegratorFactory::CreateIntegrator<PendulumSystem, ParticleState>(
         integrator_type_);
     auto cloth_node = make_unique<ClothNode>(
-        integration_step_, std::move(integrator), system, initial_state, grid_size);
+        integration_step_, std::move(integrator), system, initial_state, grid_size, sphere_ptr);
     cloth_node->GetTransform().SetPosition(glm::vec3(3.0f, 2.0f, 0.0f));
     root.AddChild(std::move(cloth_node));
   }

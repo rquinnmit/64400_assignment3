@@ -103,7 +103,9 @@ All three major sections have been successfully implemented and debugged:
 - Drag coefficient: 2.0 (higher for stability)
 
 **Visualization:**
-- Wireframe mesh (structural springs only shown)
+- **Smooth shaded surface with Phong lighting** (Extra Credit!)
+- Purple/lavender material with specular highlights
+- Normals computed from adjacent triangles
 - Position: Right side (3, 2, 0)
 
 **Key Features:**
@@ -111,6 +113,8 @@ All three major sections have been successfully implemented and debugged:
 - ✅ Shear springs (prevent diagonal collapse)
 - ✅ Flex springs (prevent folding)
 - ✅ Fixed corners (hanging cloth)
+- ✅ **Smooth shading with per-vertex normals (Extra Credit!)**
+- ✅ **Phong lighting with material properties**
 - ✅ 'R' key to reset
 
 ---
@@ -338,8 +342,8 @@ X(t+h) = X(t) + (h/6)·(k1 + 2k2 + 2k3 + k4)
 
 ### Extra Credit Opportunities:
 - ⬜ Wind force (toggle with key)
-- ⬜ Smooth shading with normals
-- ⬜ Sphere collision detection
+- ✅ **Smooth shading with normals (IMPLEMENTED - 3% extra credit)**
+- ✅ **Sphere collision detection (IMPLEMENTED - 3% extra credit)**
 - ⬜ Mouse interaction with cloth
 - ⬜ Adaptive timestep
 - ⬜ Implicit integration

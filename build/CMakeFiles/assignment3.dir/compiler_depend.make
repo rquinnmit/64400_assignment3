@@ -418,6 +418,7 @@ CMakeFiles/assignment3.dir/assignment_code/assignment3/SimulationApp.cpp.obj: C:
   C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/stddef.h \
   C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/stdint.h \
   C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/syslimits.h \
+  C:/Users/pyanq/6.4400/assignment3/assignment_code/assignment3/ClothNode.hpp \
   C:/Users/pyanq/6.4400/assignment3/assignment_code/assignment3/ForwardEulerIntegrator.hpp \
   C:/Users/pyanq/6.4400/assignment3/assignment_code/assignment3/IntegratorBase.hpp \
   C:/Users/pyanq/6.4400/assignment3/assignment_code/assignment3/IntegratorFactory.hpp \
@@ -430,6 +431,7 @@ CMakeFiles/assignment3.dir/assignment_code/assignment3/SimulationApp.cpp.obj: C:
   C:/Users/pyanq/6.4400/assignment3/assignment_code/assignment3/SimpleCircularNode.hpp \
   C:/Users/pyanq/6.4400/assignment3/assignment_code/assignment3/SimpleCircularSystem.hpp \
   C:/Users/pyanq/6.4400/assignment3/assignment_code/assignment3/SimulationApp.hpp \
+  C:/Users/pyanq/6.4400/assignment3/assignment_code/assignment3/SphereNode.hpp \
   C:/Users/pyanq/6.4400/assignment3/assignment_code/assignment3/TrapezoidalIntegrator.hpp
 
 CMakeFiles/assignment3.dir/assignment_code/assignment3/main.cpp.obj: C:/Users/pyanq/6.4400/assignment3/assignment_code/assignment3/main.cpp \
@@ -10849,6 +10851,8 @@ C:/Users/pyanq/6.4400/assignment3/gloo/components/RenderingComponent.hpp:
 
 C:/Users/pyanq/6.4400/assignment3/gloo/gl_wrapper/IBindable.hpp:
 
+C:/Users/pyanq/6.4400/assignment3/assignment_code/assignment3/SphereNode.hpp:
+
 C:/Users/pyanq/6.4400/assignment3/gloo/components/ShadingComponent.hpp:
 
 C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/shaintrin.h:
@@ -11224,6 +11228,8 @@ C:/msys64/ucrt64/include/string.h:
 C:/msys64/ucrt64/include/concurrencysal.h:
 
 C:/msys64/ucrt64/lib/gcc/x86_64-w64-mingw32/15.2.0/include/limits.h:
+
+C:/Users/pyanq/6.4400/assignment3/assignment_code/assignment3/ClothNode.hpp:
 
 C:/Users/pyanq/6.4400/assignment3/assignment_code/assignment3/IntegratorType.hpp:
 
